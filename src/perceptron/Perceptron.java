@@ -16,26 +16,26 @@ public class Perceptron {
         threshhold = 0.0;
     }
 
-    public int calcualte(List<Double> input) {
-        Double net = dotProduct(input);
+    public int calcualte(List<Double> vector) {
+        Double net = dotProduct(vector);
         if (net < threshhold)
             return 0;
         else
             return 1;
     }
 
-    public int learn(List<Double> input, int d) {
-        int y = calcualte(input);
-        modifyWeigths(input, d, y);
+    public int learn(List<Double> vector, int d) {
+        int y = calcualte(vector);
+        modifyWeigths(vector, d, y);
         modifyThreshold(d, y);
         return y;
     }
 
-    private void modifyWeigths(List<Double> input, int d, int y) {
+    private void modifyWeigths(List<Double> vector, int d, int y) {
         double alfa = 0.0001;
         List<Double> newWeights = new ArrayList<>();
         for (int i = 0; i < weigths.size(); i++) {
-            newWeights.add(weigths.get(i) + (d - y) * alfa * input.get(i));
+            newWeights.add(weigths.get(i) + (d - y) * alfa * vector.get(i));
         }
         weigths = normlize(newWeights);
     }
@@ -56,10 +56,10 @@ public class Perceptron {
         threshhold = threshhold - (d - y) * beta;
     }
 
-    private Double dotProduct(List<Double> input) {
+    private Double dotProduct(List<Double> vector) {
         double net = 0.0;
-        for (int i = 0; i < input.size(); i++) {
-            net += input.get(i) * weigths.get(i);
+        for (int i = 0; i < vector.size(); i++) {
+            net += vector.get(i) * weigths.get(i);
         }
         return net;
     }

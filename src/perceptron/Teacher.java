@@ -18,6 +18,5 @@ public class Teacher {
             if (counter > 10000)
                 break;
         }
-
     }
 }
