@@ -42,7 +42,7 @@ public class Perceptron {
 
     private List<Double> normlize(List<Double> newWeights) {
         List<Double> newWeightsNormalized = new ArrayList<>();
-        double sumOfSqueares = 0.0f;
+        double sumOfSqueares = 0.0;
         for (Double weight : newWeights)
             sumOfSqueares += weight * weight;
         double length = Math.sqrt(sumOfSqueares);
@@ -52,12 +52,12 @@ public class Perceptron {
     }
 
     private void modifyThreshold(int d, int y) {
-        double beta = 0.001f;
+        double beta = 0.0001;
         threshhold = threshhold - (d - y) * beta;
     }
 
     private Double dotProduct(List<Double> input) {
-        double net = 0.0f;
+        double net = 0.0;
         for (int i = 0; i < input.size(); i++) {
             net += input.get(i) * weigths.get(i);
         }
