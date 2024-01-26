@@ -7,7 +7,7 @@ import perceptron.Teacher;
 import java.util.Arrays;
 import java.util.List;
 
-public class Runner {
+public class ModelRunner {
     public static void main(String[] args) {
 
         String filePath = FileSelector.getFilePath("data/iris.csv");
@@ -19,6 +19,6 @@ public class Runner {
         Perceptron perceptron = new Perceptron(dataSet.getAttributeNames().size());
         Teacher.teach(perceptron, dataSet, "Setosa");
         int result = perceptron.calcualte(testDataPoint);
-        System.out.println("Perceptron prediction: " + result);
+        System.out.println("PerceptronExercise prediction: " + result);
     }
 }

@@ -12,6 +12,12 @@ public class DataSet {
     private final List<List<Double>> dataPoints;
     private final List<String> decisions;
 
+    public DataSet(List<List<Double>> dataPoints, List<String> decisions) {
+        this.attributeNames = null;
+        this.dataPoints = dataPoints;
+        this.decisions = decisions;
+    }
+
     private DataSet(String filePath) {
         this.attributeNames = new ArrayList<>();
         this.dataPoints = new ArrayList<>();
@@ -22,7 +28,7 @@ public class DataSet {
             List<String> items = new ArrayList<>(List.of(line.split(",")));
             List<Double> dataPoint = new ArrayList<>();
 
-            if (items.get(0).chars().anyMatch(Character::isAlphabetic)) {
+            if (items.getFirst().chars().anyMatch(Character::isAlphabetic)) {
                 attributeNames.addAll(items);
                 attributeNames.removeLast();
             } else {

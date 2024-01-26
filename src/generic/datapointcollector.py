@@ -6,7 +6,7 @@ def collect(attribute_names):
             try:
                 value = float(input_value)
                 data_point.append(value)
-                break  # Exit the loop if a valid value is entered
+                break
             except ValueError:
                 print("Invalid input. Please enter a valid float value.")
 

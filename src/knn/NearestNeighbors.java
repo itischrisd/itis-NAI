@@ -1,51 +1,48 @@
 package knn;
 
+import generic.Algebra;
 import generic.DataSet;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NearestNeighbors {
 
-    public static void calculate(int k, DataSet dataSet, List<Double> dataPoint) {
-        Map<Integer, Double> nearestNeighbors = new HashMap<>();
+    public static String calculate(int k, DataSet dataSet, List<Double> dataPoint) {
+        Map<Integer, Double> indexAndDistanceOfNN = new HashMap<>();
 
         for (int i = 0; i < dataSet.getDataPoints().size(); i++) {
-            double distance = calculateDistance(dataPoint, dataSet.getDataPoints().get(i));
+            double distance = Algebra.distance(dataPoint, dataSet.getDataPoints().get(i));
 
-            if (nearestNeighbors.size() < k) {
-                nearestNeighbors.put(i, distance);
+            if (indexAndDistanceOfNN.size() < k) {
+                indexAndDistanceOfNN.put(i, distance);
             } else {
-                int farthestNeighbor = Collections.max(nearestNeighbors.entrySet(), Map.Entry.comparingByValue()).getKey();
-                if (distance < nearestNeighbors.get(farthestNeighbor)) {
-                    nearestNeighbors.remove(farthestNeighbor);
-                    nearestNeighbors.put(i, distance);
+                int farthestNeighborIndex = Collections.max(indexAndDistanceOfNN.entrySet(), Map.Entry.comparingByValue()).getKey();
+                if (distance < indexAndDistanceOfNN.get(farthestNeighborIndex)) {
+                    indexAndDistanceOfNN.remove(farthestNeighborIndex);
+                    indexAndDistanceOfNN.put(i, distance);
                 }
             }
         }
 
-        List<String> neighborClasses = new ArrayList<>();
-        nearestNeighbors.keySet().forEach(index -> neighborClasses.add(dataSet.getDecisions().get(index)));
+        List<String> decisions = dataSet.getDecisions().stream().distinct().toList();
+        Map<String, Integer> decisionCount = new HashMap<>();
+        decisions.forEach(decision -> decisionCount.put(decision, 0));
 
-        Optional<Map.Entry<String, Long>> mostCommonClass = neighborClasses
-                .stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet().stream()
-                .max(Map.Entry.comparingByValue());
-
-        mostCommonClass.ifPresent(entry ->
-                System.out.println("Most common class among " + k + " neighbors is " + entry.getKey() + " with " + entry.getValue() + " occurences"));
-
-
-    }
-
-    private static double calculateDistance(List<Double> point1, List<Double> point2) {
-        double sum = 0;
-        for (int i = 0; i < point1.size(); i++) {
-            double diff = point1.get(i) - point2.get(i);
-            sum += diff * diff;
+        for (Integer index : indexAndDistanceOfNN.keySet()) {
+            decisionCount.put(dataSet.getDecisions().get(index), decisionCount.get(dataSet.getDecisions().get(index)) + 1);
         }
-        return Math.sqrt(sum);
+
+        int maxCount = Collections.max(decisionCount.values());
+
+        String finalDecision = null;
+        for (String decision : decisionCount.keySet()) {
+            if (decisionCount.get(decision) == maxCount) {
+                finalDecision = decision;
+            }
+        }
+        return finalDecision;
     }
 }
