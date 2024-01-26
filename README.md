@@ -5,7 +5,7 @@
   NAI (Artificial Intelligence Tools)
 </h1>
 
-Repository that contains solutions to the exercises for the NAI (Artificial Intelligence Tools) extracurricular projects and implementations, taught by Marcin Sydow during studies on [PJAIT](https://www.pja.edu.pl/en/).
+Repository that contains solutions to the exercises, as well as computational tasks generators, for the NAI (Artificial Intelligence Tools) extracurricular projects and implementations, taught by Marcin Sydow during studies on [PJAIT](https://www.pja.edu.pl/en/).
 
 The following code is distributed under the [GPLv3](./LICENSE).
 
