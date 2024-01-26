@@ -1,7 +1,4 @@
-import exercises.MatrixExercise;
-import exercises.PerceptronExercise;
-import exercises.VectorExercise;
-import exercises.kNNExercise;
+import exercises.*;
 
 import java.util.Scanner;
 
@@ -21,7 +18,8 @@ public class ExerciseRunner {
                 8. Transpozycja macierzy
                 9. Mnożenie macierzy
                 10. kNN
-                11. Perceptron""");
+                11. Perceptron
+                12. Ewaluacja modeli""");
 
         Scanner scanner = new Scanner(System.in);
         int exercise = scanner.nextInt();
@@ -38,6 +36,7 @@ public class ExerciseRunner {
             case 9 -> MatrixExercise.multiply();
             case 10 -> kNNExercise.run();
             case 11 -> PerceptronExercise.run();
+            case 12 -> EvaluationExercise.run();
             default -> System.out.println("Niepoprawny numer ćwiczenia!");
         }
     }
