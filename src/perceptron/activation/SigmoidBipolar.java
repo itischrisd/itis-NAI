@@ -4,16 +4,16 @@ import generic.Algebra;
 
 import java.util.List;
 
-public class SigmoidalUnipolar implements ActivationFunction {
+public class SigmoidBipolar implements ActivationFunction {
 
     @Override
     public double calculate(List<Double> weights, List<Double> inputs) {
         double net = Algebra.dotProduct(weights, inputs);
-        return 1 / (1 + Math.exp(-net));
+        return (2 / (1 + Math.exp(-net))) - 1;
     }
 
     @Override
     public double derivative(double y) {
-        return y * (1 - y);
+        return 0.5 * (1 - Math.pow(y, 2));
     }
 }
