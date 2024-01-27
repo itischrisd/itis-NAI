@@ -1,6 +1,6 @@
 package exercises;
 
-import perceptron.Perceptron;
+import generic.Algebra;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +25,9 @@ public class PerceptronExercise {
         System.out.println("b) Zakładając, że wyjście jest nieprawidłowe, oblicz, używając reguły uczenia delta, zmodyfikowany wektor wag, zakładając, że stała ucząca wynosi a=1.");
         System.out.println("c) Czy wartość progu podniesie się, czy obniży?");
 
-        Perceptron perceptron = new Perceptron(q, (double) r);
-
         System.out.println("Podaj wynik działania perceptronu (0 lub 1)");
         int userActivation = scanner.nextInt();
-        int activation = perceptron.calcualte(p);
+        int activation = Algebra.dotProduct(p, q) >= r ? 1 : 0;
         
         if (userActivation == activation) {
             System.out.println("Poprawna odpowiedź!");
@@ -42,9 +40,7 @@ public class PerceptronExercise {
         for (int i = 0; i < q.size(); i++) {
             userQ.add(scanner.nextDouble());
         }
-        perceptron.learn(p, activation == 0 ? 1 : 0, 1, 1);
-        List<Double> newQ = perceptron.getWeigths();
-
+        List<Double> newQ = Algebra.addVectors(q, Algebra.multiplyVectorByScalar(p, activation == 1 ? -1 : 1));
 
         if (userQ.equals(newQ)) {
             System.out.println("Poprawna odpowiedź!");
@@ -54,7 +50,7 @@ public class PerceptronExercise {
 
         System.out.println("Czy wartość progu podniesie się, czy obniży? (true/false)");
         boolean userR = scanner.nextBoolean();
-        boolean newR = perceptron.getThreshhold().intValue() > r;
+        boolean newR = r - (activation == 1 ? -1 : 1) > r;
 
         if (userR == newR) {
             System.out.println("Poprawna odpowiedź!");
