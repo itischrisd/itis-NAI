@@ -11,4 +11,14 @@ public class StepUnipolar implements ActivationFunction {
     public double derivative(double y) {
         return -1.0;
     }
+
+    @Override
+    public double activeValue() {
+        return 1;
+    }
+
+    @Override
+    public double inactiveValue() {
+        return 0;
+    }
 }

@@ -11,4 +11,14 @@ public class SigmoidBipolar implements ActivationFunction {
     public double derivative(double y) {
         return - 0.5 * (1 - Math.pow(y, 2));
     }
+
+    @Override
+    public double activeValue() {
+        return 1;
+    }
+
+    @Override
+    public double inactiveValue() {
+        return -1;
+    }
 }
