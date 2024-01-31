@@ -1,8 +1,11 @@
 import generic.DataSet;
 import generic.FileSelector;
 import knn.NearestNeighbors;
+import networks.NetworkTeacher;
+import networks.SingleLayer;
 import perceptron.Perceptron;
 import perceptron.Teacher;
+import perceptron.activation.SigmoidUnipolar;
 import perceptron.activation.StepUnipolar;
 
 import java.util.Arrays;
@@ -22,5 +25,18 @@ public class ModelRunner {
         double result = perceptron.calcualte(testDataPoint);
         System.out.println("Perceptron prediction: " + result);
         System.out.println(perceptron);
+
+        List<String> classes = Arrays.asList("Setosa", "Virginica", "Versicolor");
+        SingleLayer singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, dataSet.getAttributeNames().size());
+        NetworkTeacher.teach(singleLayer, dataSet);
+        List<Double> setosa = Arrays.asList(5.7, 4.4, 1.5, 0.4);
+        List<Double> virginica = Arrays.asList(6.7, 3.3, 5.7, 2.5);
+        List<Double> versicolor = Arrays.asList(4.9, 2.4, 3.3, 1.0);
+        System.out.println("Single layer prediction for Setosa: " + singleLayer.calculate(setosa));
+        System.out.println("Single layer prediction for Virginica: " + singleLayer.calculate(virginica));
+        System.out.println("Single layer prediction for Versicolor: " + singleLayer.calculate(versicolor));
+        System.out.println(singleLayer.perceptrons.get(0));
+        System.out.println(singleLayer.perceptrons.get(1));
+        System.out.println(singleLayer.perceptrons.get(2));
     }
 }

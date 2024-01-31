@@ -1,14 +1,10 @@
 package perceptron.activation;
 
-import generic.Algebra;
-
-import java.util.List;
-
 public class StepBipolar implements ActivationFunction {
 
     @Override
-    public double calculate(List<Double> weights, List<Double> inputs) {
-        return Algebra.dotProduct(weights, inputs) >= 0 ? 1 : -1;
+    public double calculate(double net) {
+        return net >= 0 ? 1 : -1;
     }
 
     @Override

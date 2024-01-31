@@ -28,17 +28,19 @@ public class Perceptron {
     public double calcualte(List<Double> inputs) {
         List<Double> inputsWithThreshold = new ArrayList<>(inputs);
         inputsWithThreshold.add(-1.0);
-        return activationFunction.calculate(weigths, inputsWithThreshold);
+        double net = Algebra.dotProduct(weigths, inputsWithThreshold);
+        return activationFunction.calculate(net);
     }
 
-    public double learn(List<Double> inputs, int d, double alfa) {
+    public double learn(List<Double> inputs, double d, double alfa) {
         double y = calcualte(inputs);
         List<Double> inputsWithThreshold = new ArrayList<>(inputs);
         inputsWithThreshold.add(-1.0);
-        List<Double> shift = Algebra.multiplyVectorByScalar(inputsWithThreshold, - (d - y) * activationFunction.derivative(y) * alfa);
+        double delta = - (d - y) * activationFunction.derivative(y) * alfa;
+        List<Double> shift = Algebra.multiplyVectorByScalar(inputsWithThreshold, delta);
         this.weigths = Algebra.addVectors(weigths, shift);
         this.weigths = Algebra.normalize(weigths);
-        return y;
+        return calcualte(inputs);
     }
 
     @Override

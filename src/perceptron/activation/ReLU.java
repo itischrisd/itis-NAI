@@ -1,14 +1,9 @@
 package perceptron.activation;
 
-import generic.Algebra;
-
-import java.util.List;
-
 public class ReLU implements ActivationFunction {
 
     @Override
-    public double calculate(List<Double> weights, List<Double> inputs) {
-        double net = Algebra.dotProduct(weights, inputs);
+    public double calculate(double net) {
         return net >= 0 ? net : 0;
     }
 
