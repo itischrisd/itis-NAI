@@ -64,7 +64,7 @@ public class ModelRunner {
         List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
         SingleLayer singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, dataSet.getAttributeNames().size());
         double learningRate = 0.001;
-        double errorThreshold = 20.5;
+        double errorThreshold = 13.6;
         NetworkTeacher.teach(singleLayer, dataSet, learningRate, errorThreshold);
         System.out.println("Single layer prediction for Setosa: " + singleLayer.decide(setosaPoint));
         System.out.println("Single layer prediction for Virginica: " + singleLayer.decide(virginicaPoint));
