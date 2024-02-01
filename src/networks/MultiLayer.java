@@ -106,12 +106,6 @@ public class MultiLayer extends Network {
             }
         }
 
-        for (int i = 0; i < weightsOfLayers.size(); i++) {
-            for (int j = 0; j < weightsOfLayers.get(i).size(); j++) {
-                weightsOfLayers.get(i).set(j, Algebra.normalize(weightsOfLayers.get(i).get(j)));
-            }
-        }
-
         return error;
     }
 

@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class ExerciseRunner {
 
     public static void main(String[] args) {
-
         System.out.println("""
                 Wybierz ćwiczenie:
                 1. Dodawanie wektorów
