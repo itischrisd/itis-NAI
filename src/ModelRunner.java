@@ -75,7 +75,7 @@ public class ModelRunner {
         List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
         MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, dataSet.getAttributeNames().size());
         double learningRate = 0.001;
-        double errorThreshold = 17.9;
+        double errorThreshold = 2.9;
         NetworkTeacher.teach(multiLayer, dataSet, learningRate, errorThreshold);
         System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
         System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
@@ -86,7 +86,7 @@ public class ModelRunner {
         List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
         MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, dataSet.getAttributeNames().size());
         double learningRate = 0.001;
-        double errorThreshold = 17.9;
+        double errorThreshold = 2.9;
         NetworkTeacher.optimizeByErrorThreshold(multiLayer, dataSet, learningRate, errorThreshold);
         System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
         System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
