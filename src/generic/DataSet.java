@@ -18,10 +18,16 @@ public class DataSet {
         this.decisions = decisions;
     }
 
-    private DataSet(String filePath) {
-        this.attributeNames = new ArrayList<>();
-        this.dataPoints = new ArrayList<>();
-        this.decisions = new ArrayList<>();
+    private DataSet(List<String> attributeNames, List<List<Double>> dataPoints, List<String> decisions) {
+        this.attributeNames = attributeNames;
+        this.dataPoints = dataPoints;
+        this.decisions = decisions;
+    }
+
+    public static DataSet parseCSV(String filePath) {
+        List<String> attributeNames = new ArrayList<>();
+        List<List<Double>> dataPoints = new ArrayList<>();
+        List<String> decisions = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine();
@@ -53,10 +59,8 @@ public class DataSet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    public static DataSet parseCSV(String filePath) {
-        return new DataSet(filePath);
+        return new DataSet(attributeNames, dataPoints, decisions);
     }
 
     public List<String> getAttributeNames() {
@@ -72,12 +76,20 @@ public class DataSet {
     }
 
     public void print() {
-        for(String attributeName : attributeNames)
-            System.out.print(attributeName + "\t");
-        System.out.println("class");
+        if (attributeNames != null) {
+            for (String attributeName : attributeNames) {
+                System.out.print(attributeName + "\t");
+            }
+            System.out.println("class");
+        } else {
+            for (int i = 0; i < dataPoints.getFirst().size(); i++) {
+                System.out.print("attrivute" + (i + 1) + "\t");
+            }
+            System.out.println("class");
+        }
 
         for (int i = 0; i < dataPoints.size(); i++) {
-            for(Double attribute : dataPoints.get(i))
+            for (Double attribute : dataPoints.get(i))
                 System.out.print(attribute + "\t");
             System.out.println(decisions.get(i));
         }
