@@ -19,6 +19,6 @@ public class ReLU implements ActivationFunction {
 
     @Override
     public double inactiveValue() {
-        return -1;
+        return 0;
     }
 }

@@ -52,13 +52,12 @@ public class SingleLayer {
 
     public String learn(List<Double> inputs, String d, double eta) {
         List<Double> outputs = calculate(inputs);
-        List<Double> desiredOutputs = new ArrayList<>();
         List<Double> inputsWithThreshold = new ArrayList<>(inputs);
         inputsWithThreshold.add(-1.0);
+        List<Double> desiredOutputs = new ArrayList<>();
         for (String aClass : classes) {
             desiredOutputs.add(aClass.equals(d) ? activationFunction.activeValue() : activationFunction.inactiveValue());
         }
-
         List<Double> deltaVector = Algebra.subtractVectors(desiredOutputs, outputs);
         for (int i = 0; i < deltaVector.size(); i++) {
             deltaVector.set(i, (-1) * deltaVector.get(i) * activationFunction.derivative(outputs.get(i) * eta));
@@ -67,11 +66,9 @@ public class SingleLayer {
         for (int i = 0; i < weightMatrix.size(); i++) {
             shifts.add(Algebra.multiplyVectorByScalar(inputsWithThreshold, deltaVector.get(i)));
         }
-
         for (int i = 0; i < weightMatrix.size(); i++) {
             weightMatrix.set(i, Algebra.addVectors(weightMatrix.get(i), shifts.get(i)));
         }
-
         return decide(inputs);
     }
 }

@@ -1,5 +1,7 @@
 package generic;
 
+import perceptron.activation.ActivationFunction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,14 +64,6 @@ public class Algebra {
         return result;
     }
 
-    public static List<List<Double>> multiplyMatrixByScalar(List<List<Double>> matrix, double scalar) {
-        List<List<Double>> result = new ArrayList<>();
-        for (List<Double> row : matrix) {
-            result.add(multiplyVectorByScalar(row, scalar));
-        }
-        return result;
-    }
-
     public static double vectorLength(List<Double> a) {
         return Math.sqrt(dotProduct(a, a));
     }
@@ -86,6 +80,30 @@ public class Algebra {
         List<List<Double>> result = new ArrayList<>();
         for (List<Double> row : matrix1) {
             result.add(multiplyMatrixByVector(matrix2, row));
+        }
+        return result;
+    }
+
+    public static List<Double> applyDerivative(List<Double> vector, ActivationFunction activationFunction) {
+        List<Double> result = new ArrayList<>();
+        for (Double value : vector) {
+            result.add(activationFunction.derivative(value));
+        }
+        return result;
+    }
+
+    public static List<Double> applyActivationFunction(List<Double> vector, ActivationFunction activationFunction) {
+        List<Double> result = new ArrayList<>();
+        for (Double value : vector) {
+            result.add(activationFunction.calculate(value));
+        }
+        return result;
+    }
+
+    public static List<Double> multiplyVectorElements(List<Double> vector1, List<Double> vector2) {
+        List<Double> result = new ArrayList<>();
+        for (int i = 0; i < vector1.size(); i++) {
+            result.add(vector1.get(i) * vector2.get(i));
         }
         return result;
     }
