@@ -6,15 +6,14 @@ import perceptron.activation.ActivationFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleLayer {
+public class SingleLayer extends Network {
 
     private final ActivationFunction activationFunction;
     private final List<List<Double>> weightMatrix;
-    private final List<String> classes;
 
     public SingleLayer(ActivationFunction activationFunction, List<String> classes, int numberOfInputs) {
         this.activationFunction = activationFunction;
-        this.classes = classes;
+        super.classes = classes;
         weightMatrix = new ArrayList<>();
         for (int i = 0; i < classes.size(); i++) {
             List<Double> weightVector = new ArrayList<>();
@@ -39,6 +38,7 @@ public class SingleLayer {
         return outputs;
     }
 
+    @Override
     public String decide(List<Double> inputs) {
         List<Double> outputs = calculate(inputs);
         int maxIndex = 0;
@@ -50,7 +50,8 @@ public class SingleLayer {
         return classes.get(maxIndex);
     }
 
-    public String learn(List<Double> inputs, String d, double eta) {
+    @Override
+    public double learn(List<Double> inputs, String d, double eta) {
         List<Double> outputs = calculate(inputs);
         List<Double> inputsWithThreshold = new ArrayList<>(inputs);
         inputsWithThreshold.add(-1.0);
@@ -58,6 +59,11 @@ public class SingleLayer {
         for (String aClass : classes) {
             desiredOutputs.add(aClass.equals(d) ? activationFunction.activeValue() : activationFunction.inactiveValue());
         }
+        double error = 0.0;
+        for (int i = 0; i < outputs.size(); i++) {
+            error += Math.pow(desiredOutputs.get(i) - outputs.get(i), 2);
+        }
+        error /= 2.0;
         List<Double> deltaVector = Algebra.subtractVectors(desiredOutputs, outputs);
         for (int i = 0; i < deltaVector.size(); i++) {
             deltaVector.set(i, (-1) * deltaVector.get(i) * activationFunction.derivative(outputs.get(i) * eta));
@@ -69,6 +75,6 @@ public class SingleLayer {
         for (int i = 0; i < weightMatrix.size(); i++) {
             weightMatrix.set(i, Algebra.addVectors(weightMatrix.get(i), shifts.get(i)));
         }
-        return decide(inputs);
+        return error;
     }
 }

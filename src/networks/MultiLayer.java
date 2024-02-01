@@ -6,16 +6,15 @@ import perceptron.activation.ActivationFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiLayer {
+public class MultiLayer extends Network {
 
-    private final List<ActivationFunction> activationFunctions;
-    private final List<String> classes;
     public final List<List<List<Double>>> weightsOfLayers;
+    private final List<ActivationFunction> activationFunctions;
 
     public MultiLayer(List<ActivationFunction> activationFunctions, List<String> classes, int numberOfInputs) {
         this.activationFunctions = activationFunctions;
         this.weightsOfLayers = new ArrayList<>();
-        this.classes = classes;
+        super.classes = classes;
         for (int i = 0; i < activationFunctions.size() - 1; i++) {
             weightsOfLayers.add(createWeightMatrix(numberOfInputs + 1, numberOfInputs + 1));
         }
@@ -39,6 +38,7 @@ public class MultiLayer {
         return outputs;
     }
 
+    @Override
     public String decide(List<Double> inputs) {
         List<List<Double>> outputs = calculate(inputs);
         int maxIndex = 0;
@@ -52,11 +52,17 @@ public class MultiLayer {
         return classes.get(maxIndex);
     }
 
-    public String learn(List<Double> inputs, String d, double eta) {
+    @Override
+    public double learn(List<Double> inputs, String d, double eta) {
         inputs = new ArrayList<>(inputs);
         inputs.add(-1.0);
         List<List<Double>> outputs = new ArrayList<>(calculate(inputs));
         List<Double> desiredOutputs = getDesiredOutputVector(d);
+        double error = 0.0;
+        for (int i = 0; i < outputs.getLast().size(); i++) {
+            error += Math.pow(desiredOutputs.get(i) - outputs.getLast().get(i), 2);
+        }
+        error /= 2.0;
         List<List<Double>> deltas = new ArrayList<>();
 
         deltas.add(calculateLastDelta(desiredOutputs, outputs.getLast()));
@@ -106,7 +112,7 @@ public class MultiLayer {
             }
         }
 
-        return decide(inputs);
+        return error;
     }
 
     private List<Double> getBackpropagationDelta(List<List<Double>> nextLayerWeights, List<Double> nextLayerDeltas) {

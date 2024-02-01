@@ -6,37 +6,19 @@ import java.util.List;
 
 public class NetworkTeacher {
 
-    public static void teach(SingleLayer singleLayer, DataSet dataSet) {
+    public static void teach(Network network, DataSet dataSet, double learningRate, double errorThreshold) {
         List<String> decisions = dataSet.getDecisions();
-        boolean complete = false;
-        int counter = 1;
-        while (!complete) {
-            complete = true;
+        double error = 1.0;
+        int counter = 0;
+        while (!(error < errorThreshold)) {
+            counter++;
+            error = 0.0;
             for (int i = 0; i < dataSet.getDataPoints().size(); i++) {
                 String d = decisions.get(i);
-                String y = singleLayer.learn(dataSet.getDataPoints().get(i), d, 0.001);
-                complete = complete && d.equals(y);
+                error += network.learn(dataSet.getDataPoints().get(i), d, learningRate);
             }
-            System.out.println("Epochs passed: " + counter++);
-            if (counter > 10000)
-                break;
-        }
-    }
-
-    public static void teach(MultiLayer multiLayer, DataSet dataSet) {
-        List<String> decisions = dataSet.getDecisions();
-        boolean complete = false;
-        int counter = 1;
-        while (!complete) {
-            complete = true;
-            for (int i = 0; i < dataSet.getDataPoints().size(); i++) {
-                String d = decisions.get(i);
-                String y = multiLayer.learn(dataSet.getDataPoints().get(i), d, 0.001);
-                complete = complete && d.equals(y);
-            }
-            System.out.println("Epochs passed: " + counter++);
-            if (counter > 10000) {
-                break;
+            if (counter % 100 == 0) {
+                System.out.println("Epochs passed: " + counter);
             }
         }
     }

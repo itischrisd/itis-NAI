@@ -36,15 +36,10 @@ public class Perceptron {
         double y = calcualte(inputs);
         List<Double> inputsWithThreshold = new ArrayList<>(inputs);
         inputsWithThreshold.add(-1.0);
-        double delta = - (d - y) * activationFunction.derivative(y) * alfa;
+        double delta = -(d - y) * activationFunction.derivative(y) * alfa;
         List<Double> shift = Algebra.multiplyVectorByScalar(inputsWithThreshold, delta);
         this.weigths = Algebra.addVectors(weigths, shift);
         this.weigths = Algebra.normalize(weigths);
         return calcualte(inputs);
-    }
-
-    @Override
-    public String toString() {
-        return "weigths first, last is threshold = " + weigths;
     }
 }

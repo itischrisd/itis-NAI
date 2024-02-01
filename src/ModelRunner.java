@@ -43,7 +43,7 @@ public class ModelRunner {
 //        System.out.println("Single layer prediction for Versicolor: " + singleLayer.decide(versicolor));
 
         MultiLayer multiLayer = new MultiLayer(Arrays.asList(new StepUnipolar(), new StepUnipolar(), new SigmoidUnipolar()), classes, dataSet.getAttributeNames().size());
-        NetworkTeacher.teach(multiLayer, dataSet);
+        NetworkTeacher.teach(multiLayer, dataSet, 0.1, 0.5);
 
 
         List<Double> setosa = Arrays.asList(5.7, 4.4, 1.5, 0.4);
