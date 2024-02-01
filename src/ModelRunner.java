@@ -31,7 +31,8 @@ public class ModelRunner {
                 1. kNN
                 2. Perceptron
                 3. Sieć jednowarstwowa
-                4. Sieć wielowarstwowa""");
+                4. Sieć wielowarstwowa
+                5. Benchmark sieci wielowarstwowej""");
 
         Scanner scanner = new Scanner(System.in);
         int model = scanner.nextInt();
