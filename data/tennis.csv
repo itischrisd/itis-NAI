@@ -1,0 +1,15 @@
+"pogoda","temperatura","wilgotność","wiatr","GRAĆ?"
+słonecznie,ciepło,wysoka,brak,nie
+słonecznie,ciepło,wysoka,jest,nie
+pochmurno,ciepło,wysoka,brak,tak
+deszczowo,normalnie,wysoka,brak,tak
+deszczowo,chłodno,normalna,brak,tak
+deszczowo,chłodno,normalna,jest,nie
+pochmurno,chłodno,normalna,jest,tak
+słonecznie,normalnie,wysoka,brak,nie
+słonecznie,chłodno,normalna,brak,tak
+deszczowo,normalnie,normalna,brak,tak
+słonecznie,normalnie,normalna,jest,tak
+pochmurno,normalnie,wysoka,jest,tak
+pochmurno,ciepło,normalna,brak,tak
+deszczowo,normalnie,wysoka,jest,nie
