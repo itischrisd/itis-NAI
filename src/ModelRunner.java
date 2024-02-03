@@ -1,4 +1,5 @@
-import generic.DataSet;
+import generic.NominalDataSet;
+import generic.NumericDataSet;
 import knn.NearestNeighbors;
 import networks.MultiLayer;
 import networks.NetworkTeacher;
@@ -14,14 +15,16 @@ import java.util.Scanner;
 
 public class ModelRunner {
 
-    private static DataSet dataSet;
+    private static NominalDataSet nominalDataSet;
+    private static NumericDataSet numericDataSet;
     private static List<Double> setosaPoint;
     private static List<Double> virginicaPoint;
     private static List<Double> versicolorPoint;
 
     public static void main(String[] args) {
 
-        dataSet = DataSet.parseCSV("data/iris.csv");
+        nominalDataSet = NominalDataSet.parseCSV("data/tennis.csv");
+        numericDataSet = NumericDataSet.parseCSV("data/iris.csv");
         setosaPoint = Arrays.asList(5.7, 4.4, 1.5, 0.4);
         virginicaPoint = Arrays.asList(6.7, 3.3, 5.7, 2.5);
         versicolorPoint = Arrays.asList(4.9, 2.4, 3.3, 1.0);
@@ -49,45 +52,45 @@ public class ModelRunner {
 
     private static void kNN() {
         List<Double> testDataPoint = Arrays.asList(5.7, 4.4, 1.5, .4);
-        NearestNeighbors.calculate(7, dataSet, testDataPoint);
+        NearestNeighbors.calculate(7, numericDataSet, testDataPoint);
     }
 
     private static void perceptron() {
-        Perceptron perceptron = new Perceptron(new StepUnipolar(), dataSet.getAttributeNames().size());
-        Teacher.teach(perceptron, dataSet, "Setosa");
+        Perceptron perceptron = new Perceptron(new StepUnipolar(), numericDataSet.getAttributeNames().size());
+        Teacher.teach(perceptron, numericDataSet, "Setosa");
         double result = perceptron.calcualte(setosaPoint);
         System.out.println("Perceptron prediction: " + result);
         System.out.println(perceptron);
     }
 
     private static void singleLayer() {
-        List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
-        SingleLayer singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, dataSet.getAttributeNames().size());
+        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
+        SingleLayer singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.001;
         double errorThreshold = 13.6;
-        NetworkTeacher.teach(singleLayer, dataSet, learningRate, errorThreshold);
+        NetworkTeacher.teach(singleLayer, numericDataSet, learningRate, errorThreshold);
         System.out.println("Single layer prediction for Setosa: " + singleLayer.decide(setosaPoint));
         System.out.println("Single layer prediction for Virginica: " + singleLayer.decide(virginicaPoint));
         System.out.println("Single layer prediction for Versicolor: " + singleLayer.decide(versicolorPoint));
     }
 
     private static void multiLayer() {
-        List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
-        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, dataSet.getAttributeNames().size());
+        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
+        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.001;
         double errorThreshold = 2.9;
-        NetworkTeacher.teach(multiLayer, dataSet, learningRate, errorThreshold);
+        NetworkTeacher.teach(multiLayer, numericDataSet, learningRate, errorThreshold);
         System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
         System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
         System.out.println("Multi layer prediction for Versicolor: " + multiLayer.decide(versicolorPoint));
     }
 
     private static void multiLayerErrorBenchmark() {
-        List<String> classes = dataSet.getDecisions().stream().distinct().sorted().toList();
-        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, dataSet.getAttributeNames().size());
+        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
+        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.001;
         double errorThreshold = 2.9;
-        NetworkTeacher.optimizeByErrorThreshold(multiLayer, dataSet, learningRate, errorThreshold);
+        NetworkTeacher.optimizeByErrorThreshold(multiLayer, numericDataSet, learningRate, errorThreshold);
         System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
         System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
         System.out.println("Multi layer prediction for Versicolor: " + multiLayer.decide(versicolorPoint));

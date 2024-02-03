@@ -6,25 +6,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSet {
+public class NumericDataSet {
 
     private final List<String> attributeNames;
     private final List<List<Double>> dataPoints;
     private final List<String> decisions;
 
-    public DataSet(List<List<Double>> dataPoints, List<String> decisions) {
+    public NumericDataSet(List<List<Double>> dataPoints, List<String> decisions) {
         this.attributeNames = null;
         this.dataPoints = dataPoints;
         this.decisions = decisions;
     }
 
-    private DataSet(List<String> attributeNames, List<List<Double>> dataPoints, List<String> decisions) {
+    private NumericDataSet(List<String> attributeNames, List<List<Double>> dataPoints, List<String> decisions) {
         this.attributeNames = attributeNames;
         this.dataPoints = dataPoints;
         this.decisions = decisions;
     }
 
-    public static DataSet parseCSV(String filePath) {
+    public static NumericDataSet parseCSV(String filePath) {
         List<String> attributeNames = new ArrayList<>();
         List<List<Double>> dataPoints = new ArrayList<>();
         List<String> decisions = new ArrayList<>();
@@ -60,7 +60,7 @@ public class DataSet {
             e.printStackTrace();
         }
 
-        return new DataSet(attributeNames, dataPoints, decisions);
+        return new NumericDataSet(attributeNames, dataPoints, decisions);
     }
 
     public List<String> getAttributeNames() {

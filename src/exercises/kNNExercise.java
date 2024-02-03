@@ -1,6 +1,6 @@
 package exercises;
 
-import generic.DataSet;
+import generic.NumericDataSet;
 import knn.NearestNeighbors;
 
 import java.util.*;
@@ -24,7 +24,7 @@ public class kNNExercise {
         vectors.add(randomVector(VECTOR_DIMENSION));
         vectors.add(randomVector(VECTOR_DIMENSION));
 
-        DataSet dataSet = new DataSet(vectors, decisions);
+        NumericDataSet numericDataSet = new NumericDataSet(vectors, decisions);
 
         System.out.println("Mając podane wektory należące do 3 kategorii (klas):");
 
@@ -48,7 +48,7 @@ public class kNNExercise {
         System.out.println("\nJaka jest klasa wektora x? (A, B, C)");
         String userResult = scanner.nextLine().trim().toUpperCase();
 
-        String result = NearestNeighbors.calculate(K, dataSet, x);
+        String result = NearestNeighbors.calculate(K, numericDataSet, x);
 
         if (userResult.equals(result)) {
             System.out.println("Poprawna odpowiedź!");
