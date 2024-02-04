@@ -1,3 +1,5 @@
+import decision.DecisionTree;
+import generic.DataPointCollector;
 import generic.NominalDataSet;
 import generic.NumericDataSet;
 import knn.NearestNeighbors;
@@ -15,38 +17,132 @@ import java.util.Scanner;
 
 public class ModelRunner {
 
+    private static final Scanner scanner = new Scanner(System.in);
     private static NominalDataSet nominalDataSet;
     private static NumericDataSet numericDataSet;
-    private static List<Double> setosaPoint;
-    private static List<Double> virginicaPoint;
-    private static List<Double> versicolorPoint;
+    private static List<Double> numericDataPoint;
+    private static List<String> nominalDataPoint;
+    private static Perceptron perceptron;
+    private static SingleLayer singleLayer;
+    private static MultiLayer multiLayer;
+    private static DecisionTree decisionTree;
 
     public static void main(String[] args) {
 
-        nominalDataSet = NominalDataSet.parseCSV("data/tennis.csv");
-        numericDataSet = NumericDataSet.parseCSV("data/iris.csv");
-        setosaPoint = Arrays.asList(5.7, 4.4, 1.5, 0.4);
-        virginicaPoint = Arrays.asList(6.7, 3.3, 5.7, 2.5);
-        versicolorPoint = Arrays.asList(4.9, 2.4, 3.3, 1.0);
+
+        interact();
+    }
+
+    private static void interact() {
+        boolean exit = false;
 
         System.out.println("""
-                Wybierz model:
-                1. kNN
-                2. Perceptron
-                3. Sieć jednowarstwowa
-                4. Sieć wielowarstwowa
-                5. Benchmark sieci wielowarstwowej""");
+                Wybierz operację:
+                1. Załaduj data set
+                2. Podaj dane do klasyfikacji
+                3. Uruchom kNN
+                4. Wytrenuj Perceptron
+                5. Wytrenuj sieć jednowarstwową
+                6. Wytrenuj sieć wielowarstwową
+                7. Prztrenowanie sieci wielowarstwowej (ekstremalna minimalizacja błędu)
+                8. Drzewo decyzyjne
+                9. Wypisz data set
+                10. Walidacja krzyżowa stałej uczącej
+                11. Wyjdź""");
 
-        Scanner scanner = new Scanner(System.in);
         int model = scanner.nextInt();
 
         switch (model) {
-            case 1 -> kNN();
-            case 2 -> perceptron();
-            case 3 -> singleLayer();
-            case 4 -> multiLayer();
-            case 5 -> multiLayerErrorBenchmark();
+            case 1 -> loadDataSet();
+            case 2 -> collectDataPoint();
+            case 3 -> kNN();
+            case 4 -> perceptron();
+            case 5 -> singleLayer();
+            case 6 -> multiLayer();
+            case 7 -> multiLayerErrorBenchmark();
+            case 8 -> decisionTree();
+            case 9 -> printDataSet();
+            case 10 -> crossValidation();
+            case 11 -> exit = true;
             default -> System.out.println("Niepoprawny numer modelu!");
+        }
+
+        if (!exit) {
+            interact();
+        }
+    }
+
+    private static void collectDataPoint() {
+        System.out.println("""
+                Wybierz rodzaj data pointu:
+                1. Nominalny
+                2. Numeryczny""");
+
+        int set = scanner.nextInt();
+
+        switch (set) {
+            case 1 -> {
+                nominalDataPoint = DataPointCollector.collectNominal(nominalDataSet.getAttributeNames());
+                if (decisionTree != null) {
+                    System.out.println("Predykcja drzewa decyzyjnego: " + decisionTree.classify(nominalDataPoint));
+                }
+            }
+            case 2 -> {
+                numericDataPoint = DataPointCollector.collectNumeric(numericDataSet.getAttributeNames());
+                if (perceptron != null) {
+                    System.out.println("Predykcja perceptronu: " + perceptron.calcualte(numericDataPoint));
+                }
+                if (singleLayer != null) {
+                    System.out.println("Predykcja sieci jednowarstwowej: " + singleLayer.calculate(numericDataPoint));
+                }
+                if (multiLayer != null) {
+                    System.out.println("Predykcja sieci wielowarstwowej: " + multiLayer.calculate(numericDataPoint));
+                }
+            }
+            default -> System.out.println("Niepoprawny numer typu!");
+        }
+    }
+
+    private static void loadDataSet() {
+        System.out.println("""
+                Wybierz rodzaj data setu:
+                1. Nominalny
+                2. Numeryczny""");
+
+        int set = scanner.nextInt();
+
+        switch (set) {
+            case 1 -> loadNominalDataSet();
+            case 2 -> loadNumericDataSet();
+            default -> System.out.println("Niepoprawny numer setu!");
+        }
+    }
+
+    private static void loadNominalDataSet() {
+        System.out.println("""
+                Wybierz data set:
+                1. tennis.csv
+                2. glasses.csv""");
+
+        int set = scanner.nextInt();
+
+        switch (set) {
+            case 1 -> nominalDataSet = NominalDataSet.parseCSV("data/tennis.csv");
+            case 2 -> nominalDataSet = NominalDataSet.parseCSV("data/glasses.csv");
+            default -> System.out.println("Niepoprawny numer setu!");
+        }
+    }
+
+    private static void loadNumericDataSet() {
+        System.out.println("""
+                Wybierz data set:
+                1. iris.csv""");
+
+        int set = scanner.nextInt();
+
+        switch (set) {
+            case 1 -> numericDataSet = NumericDataSet.parseCSV("data/iris.csv");
+            default -> System.out.println("Niepoprawny numer setu!");
         }
     }
 
@@ -56,43 +152,83 @@ public class ModelRunner {
     }
 
     private static void perceptron() {
-        Perceptron perceptron = new Perceptron(new StepUnipolar(), numericDataSet.getAttributeNames().size());
+        perceptron = new Perceptron(new StepUnipolar(), numericDataSet.getAttributeNames().size());
         Teacher.teach(perceptron, numericDataSet, "Setosa");
-        double result = perceptron.calcualte(setosaPoint);
-        System.out.println("Perceptron prediction: " + result);
-        System.out.println(perceptron);
+        if (numericDataPoint != null) {
+            System.out.println("Predykcja perceptronu: " + perceptron.calcualte(numericDataPoint));
+        }
     }
 
     private static void singleLayer() {
-        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
-        SingleLayer singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, numericDataSet.getAttributeNames().size());
+        List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
+        singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.001;
         double errorThreshold = 13.6;
-        NetworkTeacher.teach(singleLayer, numericDataSet, learningRate, errorThreshold);
-        System.out.println("Single layer prediction for Setosa: " + singleLayer.decide(setosaPoint));
-        System.out.println("Single layer prediction for Virginica: " + singleLayer.decide(virginicaPoint));
-        System.out.println("Single layer prediction for Versicolor: " + singleLayer.decide(versicolorPoint));
+        double splitRatio = 0.75;
+        NetworkTeacher.teach(singleLayer, numericDataSet, learningRate, errorThreshold, splitRatio);
+        double accuracy = NetworkTeacher.evaluate(singleLayer, numericDataSet);
+        System.out.println("Dokładność: " + accuracy);
+        if (numericDataPoint != null) {
+            System.out.println("Predykcja sieci jednowarstwowej: " + singleLayer.calculate(numericDataPoint));
+        }
     }
 
     private static void multiLayer() {
-        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
-        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
-        double learningRate = 0.001;
+        List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
+        multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
+        double learningRate = 0.01;
         double errorThreshold = 2.9;
-        NetworkTeacher.teach(multiLayer, numericDataSet, learningRate, errorThreshold);
-        System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
-        System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
-        System.out.println("Multi layer prediction for Versicolor: " + multiLayer.decide(versicolorPoint));
+        double splitRatio = 0.75;
+        NetworkTeacher.teach(multiLayer, numericDataSet, learningRate, errorThreshold, splitRatio);
+        double accuracy = NetworkTeacher.evaluate(multiLayer, numericDataSet);
+        System.out.println("Dokładność: " + accuracy);
+        if (numericDataPoint != null) {
+            System.out.println("Predykcja sieci wielowarstwowej: " + multiLayer.calculate(numericDataPoint));
+        }
     }
 
     private static void multiLayerErrorBenchmark() {
-        List<String> classes = numericDataSet.getDecisions().stream().distinct().sorted().toList();
-        MultiLayer multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
-        double learningRate = 0.001;
+        List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
+        multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
+        double learningRate = 0.01;
         double errorThreshold = 2.9;
         NetworkTeacher.optimizeByErrorThreshold(multiLayer, numericDataSet, learningRate, errorThreshold);
-        System.out.println("Multi layer prediction for Setosa: " + multiLayer.decide(setosaPoint));
-        System.out.println("Multi layer prediction for Virginica: " + multiLayer.decide(virginicaPoint));
-        System.out.println("Multi layer prediction for Versicolor: " + multiLayer.decide(versicolorPoint));
+        if (numericDataPoint != null) {
+            System.out.println("Predykcja sieci wielowarstwowej: " + multiLayer.calculate(numericDataPoint));
+        }
+    }
+
+    private static void decisionTree() {
+        decisionTree = new DecisionTree(nominalDataSet);
+        decisionTree.printTree();
+
+        if (nominalDataPoint != null) {
+            System.out.println("Predykcja drzewa decyzyjnego: " + decisionTree.classify(nominalDataPoint));
+        }
+    }
+
+    private static void printDataSet() {
+        if (nominalDataSet != null) {
+            nominalDataSet.print();
+        }
+        if (numericDataSet != null) {
+            numericDataSet.print();
+        }
+    }
+
+    private static void crossValidation() {
+        List<Double> learningRates = Arrays.asList(0.001, 0.01, 0.05, 0.1, 0.2);
+        double errorThreshold = 2.9;
+        int folds = 10;
+        double splitRatio = 0.75;
+        double bestLearningRate = NetworkTeacher.crossValidate(numericDataSet, learningRates, errorThreshold, folds, splitRatio);
+        System.out.println("Najlepsza stała ucząca: " + bestLearningRate + ", tworzę sieć wielowarstwową...");
+
+        List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
+        multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
+        NetworkTeacher.teach(multiLayer, numericDataSet, bestLearningRate, errorThreshold, splitRatio);
+        if (numericDataPoint != null) {
+            System.out.println("Predykcja sieci wielowarstwowej: " + multiLayer.calculate(numericDataPoint));
+        }
     }
 }

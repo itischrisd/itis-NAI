@@ -13,8 +13,8 @@ public class NearestNeighbors {
     public static String calculate(int k, NumericDataSet numericDataSet, List<Double> dataPoint) {
         Map<Integer, Double> indexAndDistanceOfNN = new HashMap<>();
 
-        for (int i = 0; i < numericDataSet.getDataPoints().size(); i++) {
-            double distance = Algebra.distance(dataPoint, numericDataSet.getDataPoints().get(i));
+        for (int i = 0; i < numericDataSet.getAllDataPoints().size(); i++) {
+            double distance = Algebra.distance(dataPoint, numericDataSet.getAllDataPoints().get(i));
 
             if (indexAndDistanceOfNN.size() < k) {
                 indexAndDistanceOfNN.put(i, distance);
@@ -27,12 +27,12 @@ public class NearestNeighbors {
             }
         }
 
-        List<String> decisions = numericDataSet.getDecisions().stream().distinct().toList();
+        List<String> decisions = numericDataSet.getAllDecisions().stream().distinct().toList();
         Map<String, Integer> decisionCount = new HashMap<>();
         decisions.forEach(decision -> decisionCount.put(decision, 0));
 
         for (Integer index : indexAndDistanceOfNN.keySet()) {
-            decisionCount.put(numericDataSet.getDecisions().get(index), decisionCount.get(numericDataSet.getDecisions().get(index)) + 1);
+            decisionCount.put(numericDataSet.getAllDecisions().get(index), decisionCount.get(numericDataSet.getAllDecisions().get(index)) + 1);
         }
 
         int maxCount = Collections.max(decisionCount.values());

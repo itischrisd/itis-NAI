@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class DataPointCollector {
 
-    public static List<Double> collect(List<String> attributeNames) {
+    public static List<Double> collectNumeric(List<String> attributeNames) {
         List<Double> dataPoint = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
@@ -18,6 +18,19 @@ public class DataPointCollector {
             } while (!isValidDouble(input));
 
             double value = Double.parseDouble(input);
+            dataPoint.add(value);
+        }
+
+        return dataPoint;
+    }
+
+    public static List<String> collectNominal(List<String> attributeNames) {
+        List<String> dataPoint = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        for (String attributeName : attributeNames) {
+            System.out.print("Enter a valid value for attribute " + attributeName + ": ");
+            String value = scanner.nextLine();
             dataPoint.add(value);
         }
 

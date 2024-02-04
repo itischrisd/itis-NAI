@@ -61,17 +61,10 @@ public class NominalDataSet {
     }
 
     public void print() {
-        if (attributeNames != null) {
-            for (String attributeName : attributeNames) {
-                System.out.print(attributeName + "\t");
-            }
-            System.out.println("class");
-        } else {
-            for (int i = 0; i < dataPoints.getFirst().size(); i++) {
-                System.out.print("attrivute" + (i + 1) + "\t");
-            }
-            System.out.println("class");
+        for (String attributeName : attributeNames) {
+            System.out.print(attributeName + "\t");
         }
+        System.out.println("class");
 
         for (int i = 0; i < dataPoints.size(); i++) {
             for (String attribute : dataPoints.get(i))
