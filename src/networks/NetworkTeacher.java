@@ -12,14 +12,15 @@ public class NetworkTeacher {
     public static void teach(Network network, NumericDataSet numericDataSet, double learningRate, double errorThreshold, double splitRatio) {
         numericDataSet.splitToTrainAndTest(splitRatio);
         List<String> decisions = numericDataSet.getTrainDecisions();
+        List<List<Double>> dataPoints = numericDataSet.getTrainDataPoints();
         double error = Double.MAX_VALUE;
         int counter = 0;
         while (!(error < errorThreshold)) {
             counter++;
             error = 0.0;
-            for (int i = 0; i < numericDataSet.getTrainDataPoints().size(); i++) {
+            for (int i = 0; i < dataPoints.size(); i++) {
                 String d = decisions.get(i);
-                error += network.learn(numericDataSet.getTrainDataPoints().get(i), d, learningRate);
+                error += network.learn(dataPoints.get(i), d, learningRate);
             }
             if (counter % 1000 == 0) {
                 System.out.println("Minęło epok: " + counter + ", error: " + error);
@@ -46,12 +47,13 @@ public class NetworkTeacher {
         }
     }
 
-    public static double evaluate(Network network, NumericDataSet numericDataSet) {
+    public static void evaluate(Network network, NumericDataSet numericDataSet) {
         List<String> decisions = numericDataSet.getTestDecisions();
+        List<List<Double>> dataPoints = numericDataSet.getTestDataPoints();
         int correct = 0;
-        for (int i = 0; i < numericDataSet.getTestDataPoints().size(); i++) {
+        for (int i = 0; i < dataPoints.size(); i++) {
             String d = decisions.get(i);
-            String prediction = network.decide(numericDataSet.getTestDataPoints().get(i));
+            String prediction = network.decide(dataPoints.get(i));
             if (d.equals(prediction)) {
                 correct++;
             }
@@ -60,7 +62,6 @@ public class NetworkTeacher {
         System.out.println("Wszystkich przypadków: " + numericDataSet.getTestDataPoints().size());
         System.out.println("Poprawnie zaklasyfikowanych: " + correct);
         System.out.println("Dokładność: " + accuracy);
-        return accuracy;
     }
 
     public static double crossValidate(NumericDataSet numericDataSet, List<Double> learningRates, double errorThreshold, int folds, double splitRatio) {

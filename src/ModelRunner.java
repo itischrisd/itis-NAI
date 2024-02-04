@@ -7,7 +7,7 @@ import networks.MultiLayer;
 import networks.NetworkTeacher;
 import networks.SingleLayer;
 import perceptron.Perceptron;
-import perceptron.Teacher;
+import perceptron.PerceptronTeacher;
 import perceptron.activation.SigmoidUnipolar;
 import perceptron.activation.StepUnipolar;
 
@@ -153,10 +153,12 @@ public class ModelRunner {
 
     private static void perceptron() {
         perceptron = new Perceptron(new StepUnipolar(), numericDataSet.getAttributeNames().size());
-        Teacher.teach(perceptron, numericDataSet, "Setosa");
+        double splitRatio = 0.75;
+        PerceptronTeacher.teach(perceptron, numericDataSet, "Setosa", splitRatio);
         if (numericDataPoint != null) {
             System.out.println("Predykcja perceptronu: " + perceptron.calcualte(numericDataPoint));
         }
+        PerceptronTeacher.evaluate(perceptron, numericDataSet, "Setosa");
     }
 
     private static void singleLayer() {
@@ -166,8 +168,7 @@ public class ModelRunner {
         double errorThreshold = 13.6;
         double splitRatio = 0.75;
         NetworkTeacher.teach(singleLayer, numericDataSet, learningRate, errorThreshold, splitRatio);
-        double accuracy = NetworkTeacher.evaluate(singleLayer, numericDataSet);
-        System.out.println("Dokładność: " + accuracy);
+        NetworkTeacher.evaluate(singleLayer, numericDataSet);
         if (numericDataPoint != null) {
             System.out.println("Predykcja sieci jednowarstwowej: " + singleLayer.calculate(numericDataPoint));
         }
@@ -180,8 +181,7 @@ public class ModelRunner {
         double errorThreshold = 2.9;
         double splitRatio = 0.75;
         NetworkTeacher.teach(multiLayer, numericDataSet, learningRate, errorThreshold, splitRatio);
-        double accuracy = NetworkTeacher.evaluate(multiLayer, numericDataSet);
-        System.out.println("Dokładność: " + accuracy);
+        NetworkTeacher.evaluate(multiLayer, numericDataSet);
         if (numericDataPoint != null) {
             System.out.println("Predykcja sieci wielowarstwowej: " + multiLayer.calculate(numericDataPoint));
         }
