@@ -4,6 +4,7 @@ import java.util.*;
 
 public class BayesExercise {
 
+    private static List<String> attributeNames;
     private static Map<String, List<String>> attributeSpace;
     private static List<List<String>> trainingSet;
     private static List<String> testPoint;
@@ -12,26 +13,30 @@ public class BayesExercise {
         Random random = new Random();
         Scanner scanner = new Scanner(System.in);
 
-        attributeSpace = random.nextInt() % 2 == 0 ? createGlassesAttributeSpace() : createTennisAttributeSpace();
+        if (random.nextInt() % 2 == 0) {
+            createGlassesAttributeSpace();
+        } else {
+            createTennisAttributeSpace();
+        }
+
         int trainingSetSize = random.nextInt(11) + 10;
         trainingSet = createTrainingSet(trainingSetSize, random);
         testPoint = createTestPoint(random);
 
         System.out.println("Dla poniższej tabeli decyzyjnej:");
-        printTable(attributeSpace, trainingSet);
+        printTable(attributeNames, trainingSet);
 
         System.out.println("\nZnajdź prawdopodobieństwo przynależności punktu testowego do każdej z klas.");
         System.out.println("Jeśli jest to konieczne dla jakiegoś atrybutu, to zastosuj wygładzanie dla tego atrybutu.");
         System.out.println("Punkt testowy:");
 
-        printTable(attributeSpace, List.of(testPoint));
+        printTable(attributeNames.subList(0, attributeNames.size() - 1), List.of(testPoint));
     }
 
-    private static void printTable(Map<String, List<String>> attributeSpace, List<List<String>> trainingSet) {
-        List<String> attributes = new ArrayList<>(attributeSpace.keySet());
+    private static void printTable(List<String> attributeNames, List<List<String>> trainingSet) {
         List<Integer> columnLengths = new ArrayList<>();
 
-        for (String attribute : attributes) {
+        for (String attribute : attributeNames) {
             int maxLength = attribute.length();
             for (String value : attributeSpace.get(attribute)) {
                 maxLength = Math.max(maxLength, value.length());
@@ -39,8 +44,8 @@ public class BayesExercise {
             columnLengths.add(maxLength);
         }
 
-        for (int i = 0; i < attributes.size(); i++) {
-            System.out.printf("%-" + (columnLengths.get(i) + 1) + "s", attributes.get(i));
+        for (int i = 0; i < attributeNames.size(); i++) {
+            System.out.printf("%-" + (columnLengths.get(i) + 1) + "s", attributeNames.get(i));
         }
         System.out.println();
 
@@ -78,23 +83,23 @@ public class BayesExercise {
         return trainingSet;
     }
 
-    private static Map<String, List<String>> createTennisAttributeSpace() {
-        Map<String, List<String>> attributeSpace = new LinkedHashMap<>();
+    private static void createTennisAttributeSpace() {
+        attributeSpace = new LinkedHashMap<>();
         attributeSpace.put("pogoda", List.of("deszczowo", "pochmurno", "słonecznie"));
         attributeSpace.put("temperatura", List.of("chłodno", "ciepło", "normalnie"));
         attributeSpace.put("wilgotność", List.of("wysoka", "normalna"));
         attributeSpace.put("wiatr", List.of("jest", "brak"));
         attributeSpace.put("GRAĆ?", List.of("tak", "nie"));
-        return attributeSpace;
+        attributeNames = new ArrayList<>(attributeSpace.keySet());
     }
 
-    private static Map<String, List<String>> createGlassesAttributeSpace() {
-        Map<String, List<String>> attributeSpace = new LinkedHashMap<>();
+    private static void createGlassesAttributeSpace() {
+        attributeSpace = new LinkedHashMap<>();
         attributeSpace.put("wiek", List.of("młody", "pre-presbyopic", "presbyopic"));
         attributeSpace.put("presc.", List.of("myope", "hypermetrope"));
         attributeSpace.put("astygmatyzm", List.of("tak", "nie"));
         attributeSpace.put("łzawienie", List.of("normalne", "niskie"));
         attributeSpace.put("OKULARY", List.of("zbędne", "lekkie", "mocne"));
-        return attributeSpace;
+        attributeNames = new ArrayList<>(attributeSpace.keySet());
     }
 }
