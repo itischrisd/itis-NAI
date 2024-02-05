@@ -1,4 +1,5 @@
 import bayes.NaiveBayes;
+import clustering.KMeans;
 import decision.DecisionTree;
 import generic.DataPointCollector;
 import generic.NominalDataSet;
@@ -50,7 +51,8 @@ public class ModelRunner {
                 9. Wypisz data set
                 10. Walidacja krzyżowa stałej uczącej
                 11. Naiwny klasyfikator Bayesa
-                12. Wyjdź""");
+                12. k-średnich
+                13. Wyjdź""");
 
         int model = scanner.nextInt();
 
@@ -66,13 +68,25 @@ public class ModelRunner {
             case 9 -> printDataSet();
             case 10 -> crossValidation();
             case 11 -> naiveBayes();
-            case 12 -> exit = true;
+            case 12 -> kMeans();
+            case 13 -> exit = true;
             default -> System.out.println("Niepoprawny numer modelu!");
         }
 
         if (!exit) {
             interact();
         }
+    }
+
+    private static void kMeans() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
+        int k = 3;
+        KMeans kMeans = new KMeans(numericDataSet);
+        kMeans.cluster(k);
+        kMeans.printClusters();
     }
 
     private static void naiveBayes() {
