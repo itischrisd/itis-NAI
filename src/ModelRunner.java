@@ -1,3 +1,4 @@
+import bayes.NaiveBayes;
 import decision.DecisionTree;
 import generic.DataPointCollector;
 import generic.NominalDataSet;
@@ -48,7 +49,8 @@ public class ModelRunner {
                 8. Drzewo decyzyjne
                 9. Wypisz data set
                 10. Walidacja krzyżowa stałej uczącej
-                11. Wyjdź""");
+                11. Naiwny klasyfikator Bayesa
+                12. Wyjdź""");
 
         int model = scanner.nextInt();
 
@@ -63,13 +65,27 @@ public class ModelRunner {
             case 8 -> decisionTree();
             case 9 -> printDataSet();
             case 10 -> crossValidation();
-            case 11 -> exit = true;
+            case 11 -> naiveBayes();
+            case 12 -> exit = true;
             default -> System.out.println("Niepoprawny numer modelu!");
         }
 
         if (!exit) {
             interact();
         }
+    }
+
+    private static void naiveBayes() {
+        if (nominalDataSet == null) {
+            System.out.println("Najpierw załaduj data set nominalny!");
+            return;
+        }
+        System.out.println("Podaj dane do klasyfikacji:");
+        List<String> testPoint = DataPointCollector.collectNominal(nominalDataSet.getAttributeNames());
+        NaiveBayes naiveBayes = new NaiveBayes(nominalDataSet);
+        System.out.println("Prawdopodobieństwa przynależności punktu testowego do klas:");
+        System.out.println(naiveBayes.calculateProbabilities(testPoint));
+        System.out.println("Klasa, do której zaklasyfikowano punkt testowy: " + naiveBayes.decide(testPoint));
     }
 
     private static void collectDataPoint() {
@@ -147,11 +163,19 @@ public class ModelRunner {
     }
 
     private static void kNN() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
         List<Double> testDataPoint = Arrays.asList(5.7, 4.4, 1.5, .4);
         NearestNeighbors.calculate(7, numericDataSet, testDataPoint);
     }
 
     private static void perceptron() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
         perceptron = new Perceptron(new StepUnipolar(), numericDataSet.getAttributeNames().size());
         double splitRatio = 0.75;
         PerceptronTeacher.teach(perceptron, numericDataSet, "Setosa", splitRatio);
@@ -162,6 +186,10 @@ public class ModelRunner {
     }
 
     private static void singleLayer() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
         List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
         singleLayer = new SingleLayer(new SigmoidUnipolar(), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.001;
@@ -175,6 +203,10 @@ public class ModelRunner {
     }
 
     private static void multiLayer() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
         List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
         multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.01;
@@ -188,6 +220,10 @@ public class ModelRunner {
     }
 
     private static void multiLayerErrorBenchmark() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
         List<String> classes = numericDataSet.getAllDecisions().stream().distinct().sorted().toList();
         multiLayer = new MultiLayer(Arrays.asList(new SigmoidUnipolar(), new SigmoidUnipolar()), classes, numericDataSet.getAttributeNames().size());
         double learningRate = 0.01;
@@ -199,6 +235,11 @@ public class ModelRunner {
     }
 
     private static void decisionTree() {
+        if (nominalDataSet == null) {
+            System.out.println("Najpierw załaduj data set nominalny!");
+            return;
+        }
+
         decisionTree = new DecisionTree(nominalDataSet);
         decisionTree.printTree();
 
@@ -217,6 +258,11 @@ public class ModelRunner {
     }
 
     private static void crossValidation() {
+        if (numericDataSet == null) {
+            System.out.println("Najpierw załaduj data set numeryczny!");
+            return;
+        }
+
         List<Double> learningRates = Arrays.asList(0.001, 0.01, 0.05, 0.1, 0.2);
         double errorThreshold = 2.9;
         int folds = 10;

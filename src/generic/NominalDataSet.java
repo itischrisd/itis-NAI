@@ -12,7 +12,7 @@ public class NominalDataSet {
     private final List<List<String>> dataPoints;
     private final List<String> decisions;
 
-    private NominalDataSet(List<String> attributeNames, List<List<String>> dataPoints, List<String> decisions) {
+    public NominalDataSet(List<String> attributeNames, List<List<String>> dataPoints, List<String> decisions) {
         this.attributeNames = attributeNames;
         this.dataPoints = dataPoints;
         this.decisions = decisions;

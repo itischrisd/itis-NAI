@@ -1,5 +1,8 @@
 package exercises;
 
+import bayes.NaiveBayes;
+import generic.NominalDataSet;
+
 import java.util.*;
 
 public class BayesExercise {
@@ -31,6 +34,40 @@ public class BayesExercise {
         System.out.println("Punkt testowy:");
 
         printTable(attributeNames.subList(0, attributeNames.size() - 1), List.of(testPoint));
+
+        List<String> decisions = new ArrayList<>();
+        List<List<String>> dataPoints = new ArrayList<>();
+        for (List<String> dataPoint : trainingSet) {
+            decisions.add(dataPoint.getLast());
+            dataPoints.add(dataPoint.subList(0, dataPoint.size() - 1));
+        }
+        NominalDataSet dataSet = new NominalDataSet(attributeNames, dataPoints, decisions);
+
+        NaiveBayes naiveBayes = new NaiveBayes(dataSet);
+        Map<String, Double> probabilities = naiveBayes.calculateProbabilities(testPoint);
+        String decision = naiveBayes.decide(testPoint);
+
+        System.out.println("Podaj nazwę klasy, do której zaklasyfikowano punkt testowy:");
+        String userDecision = scanner.nextLine();
+        if (userDecision.equals(decision)) {
+            System.out.println("Poprawna odpowiedź!");
+        } else {
+            System.out.println("Niepoprawna odpowiedź. Prawidłowy wynik to: " + decision);
+        }
+
+        for (Map.Entry<String, Double> entry : probabilities.entrySet()) {
+            System.out.println("Podaj licznik dla prawdopodobieństwa przynależności punktu testowego do klasy " + entry.getKey() + ":");
+            double userProbabilityNumerator = scanner.nextDouble();
+            System.out.println("Podaj mianownik dla prawdopodobieństwa przynależności punktu testowego do klasy " + entry.getKey() + ":");
+            double userProbabilityDenominator = scanner.nextDouble();
+            double userProbability = userProbabilityNumerator / userProbabilityDenominator;
+            if (userProbability == entry.getValue()) {
+                System.out.println("Poprawna odpowiedź!");
+            } else {
+                System.out.println("Niepoprawna odpowiedź. Prawidłowy wynik po podzieleniu to: " + entry.getValue());
+            }
+
+        }
     }
 
     private static void printTable(List<String> attributeNames, List<List<String>> trainingSet) {
