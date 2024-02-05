@@ -75,6 +75,7 @@ public class KMeans {
     private Map<List<Double>, List<List<Double>>> createClustersWithNewCentroids() {
         Map<List<Double>, List<List<Double>>> newClusters = new HashMap<>();
         for (Map.Entry<List<Double>, List<List<Double>>> entry : clusters.entrySet()) {
+            if (entry.getValue().isEmpty()) continue;
             List<Double> newCentroid = Algebra.centroid(entry.getValue());
             centroids.set(centroids.indexOf(entry.getKey()), newCentroid);
             newClusters.put(newCentroid, entry.getValue());
