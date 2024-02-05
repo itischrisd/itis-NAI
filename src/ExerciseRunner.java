@@ -19,7 +19,8 @@ public class ExerciseRunner {
                 10. kNN
                 11. Perceptron
                 12. Ewaluacja modeli
-                13. Naiwny klasyfikator Bayesa""");
+                13. Naiwny klasyfikator Bayesa
+                14. k-średnich""");
 
         Scanner scanner = new Scanner(System.in);
         int exercise = scanner.nextInt();
@@ -38,6 +39,7 @@ public class ExerciseRunner {
             case 11 -> PerceptronExercise.run();
             case 12 -> EvaluationExercise.run();
             case 13 -> BayesExercise.run();
+            case 14 -> KMeansExercise.run();
             default -> System.out.println("Niepoprawny numer ćwiczenia!");
         }
     }

@@ -12,7 +12,7 @@ public class KMeansExercise {
     private static final List<List<Double>> centroids = new ArrayList<>();
     private static Map<List<Double>, List<List<Double>>> clusters = new HashMap<>();
 
-    public static void main(String[] args) {
+    public static void run() {
 
         Scanner scanner = new Scanner(System.in);
 
