@@ -107,4 +107,16 @@ public class Algebra {
         }
         return result;
     }
+
+    public static List<Double> centroid(List<List<Double>> vectors) {
+        List<Double> result = new ArrayList<>();
+        for (int i = 0; i < vectors.getFirst().size(); i++) {
+            double sum = 0;
+            for (List<Double> vector : vectors) {
+                sum += vector.get(i);
+            }
+            result.add(sum / vectors.size());
+        }
+        return result;
+    }
 }

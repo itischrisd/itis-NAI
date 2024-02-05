@@ -158,7 +158,7 @@ public class VectorExercise {
         }
     }
 
-    static List<Double> randomVector(int dimension) {
+    public static List<Double> randomVector(int dimension) {
         List<Double> vector = new ArrayList<>();
         for (int i = 0; i < dimension; i++) {
             vector.add((double) (random.nextInt(11) - 5));
