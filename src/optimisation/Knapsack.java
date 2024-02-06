@@ -18,6 +18,46 @@ public class Knapsack {
         this.capacity = generateRandomCapacity();
     }
 
+    public List<Integer> hillClimbing() {
+        List<Integer> currentCharacteristicVector = generateRandomCharacteristicVector();
+        int currentValue = evaluateCharacteristicVector(currentCharacteristicVector);
+        List<List<Integer>> neighbours;
+        boolean improved = true;
+
+        while (improved) {
+            improved = false;
+            neighbours = generateNeighbours(currentCharacteristicVector);
+            for (List<Integer> neighbour : neighbours) {
+                int neighbourValue = evaluateCharacteristicVector(neighbour);
+                if (neighbourValue > currentValue) {
+                    currentCharacteristicVector = neighbour;
+                    currentValue = neighbourValue;
+                    improved = true;
+                }
+            }
+        }
+        return currentCharacteristicVector;
+    }
+
+    private List<List<Integer>> generateNeighbours(List<Integer> currentCharacteristicVector) {
+        List<List<Integer>> neighbours = new ArrayList<>();
+        for (int i = 0; i < currentCharacteristicVector.size(); i++) {
+            List<Integer> neighbour = new ArrayList<>(currentCharacteristicVector);
+            neighbour.set(i, neighbour.get(i) == 0 ? 1 : 0);
+            neighbours.add(neighbour);
+        }
+        return neighbours;
+    }
+
+    private List<Integer> generateRandomCharacteristicVector() {
+        Random random = new Random();
+        List<Integer> characteristicVector = new ArrayList<>(items.size());
+        for (int i = 0; i < items.size(); i++) {
+            characteristicVector.add(random.nextInt(2));
+        }
+        return characteristicVector;
+    }
+
     private List<String> generateRandomItems(int numberOfItems) {
         List<String> items = new ArrayList<>(numberOfItems);
         for (int i = 0; i < numberOfItems; i++) {

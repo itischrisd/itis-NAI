@@ -9,6 +9,7 @@ import networks.MultiLayer;
 import networks.NetworkTeacher;
 import networks.SingleLayer;
 import optimisation.Knapsack;
+import optimisation.TravellingSalesman;
 import perceptron.Perceptron;
 import perceptron.PerceptronTeacher;
 import perceptron.activation.SigmoidUnipolar;
@@ -52,7 +53,8 @@ public class ModelRunner {
                 11. Naiwny klasyfikator Bayesa
                 12. k-średnich
                 13. Problem plecakowy
-                14. Wyjdź""");
+                14. Problem komiwojażera
+                15. Wyjdź""");
 
         int model = scanner.nextInt();
 
@@ -70,7 +72,8 @@ public class ModelRunner {
             case 11 -> naiveBayes();
             case 12 -> kMeans();
             case 13 -> knapsack();
-            case 14 -> exit = true;
+            case 14 -> tsp();
+            case 15 -> exit = true;
             default -> System.out.println("Niepoprawny numer modelu!");
         }
 
@@ -79,8 +82,22 @@ public class ModelRunner {
         }
     }
 
+    private static void tsp() {
+        int numberOfCities = 15;
+        TravellingSalesman salesman = new TravellingSalesman(numberOfCities);
+        List<Integer> bestRoute = salesman.bruteForce();
+        System.out.println("Najlepsza trasa (brute force):");
+        salesman.printRoute(bestRoute);
+        bestRoute = salesman.greedy();
+        System.out.println("Najlepsza trasa (metoda zachłanna):");
+        salesman.printRoute(bestRoute);
+        bestRoute = salesman.hillClimbing();
+        System.out.println("Najlepsza trasa (hill climbing):");
+        salesman.printRoute(bestRoute);
+    }
+
     private static void knapsack() {
-        int numberOfItems = 10;
+        int numberOfItems = 15;
         Knapsack knapsack = new Knapsack(numberOfItems);
         System.out.println("Wygenerowany zestaw przedmiotów:");
         knapsack.printSolution(new ArrayList<>(Collections.nCopies(numberOfItems, 1)));
@@ -88,6 +105,8 @@ public class ModelRunner {
         knapsack.printSolution(knapsack.bruteForce());
         System.out.println("Najlepsze rozwiązanie (metoda zachłanna):");
         knapsack.printSolution(knapsack.greedy());
+        System.out.println("Najlepsze rozwiązanie (hill climbing):");
+        knapsack.printSolution(knapsack.hillClimbing());
     }
 
     private static void kMeans() {
@@ -182,9 +201,10 @@ public class ModelRunner {
 
         int set = scanner.nextInt();
 
-        switch (set) {
-            case 1 -> numericDataSet = NumericDataSet.parseCSV("data/iris.csv");
-            default -> System.out.println("Niepoprawny numer setu!");
+        if (set == 1) {
+            numericDataSet = NumericDataSet.parseCSV("data/iris.csv");
+        } else {
+            System.out.println("Niepoprawny numer setu!");
         }
     }
 
