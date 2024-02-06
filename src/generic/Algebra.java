@@ -119,4 +119,17 @@ public class Algebra {
         }
         return result;
     }
+
+    public static List<Integer> incrementBinaryVector(List<Integer> characteristicVector) {
+        List<Integer> result = new ArrayList<>(characteristicVector);
+        for (int i = result.size() - 1; i >= 0; i--) {
+            if (result.get(i) == 0) {
+                result.set(i, 1);
+                break;
+            } else {
+                result.set(i, 0);
+            }
+        }
+        return result;
+    }
 }

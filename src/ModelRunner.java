@@ -8,14 +8,13 @@ import knn.NearestNeighbors;
 import networks.MultiLayer;
 import networks.NetworkTeacher;
 import networks.SingleLayer;
+import optimisation.Knapsack;
 import perceptron.Perceptron;
 import perceptron.PerceptronTeacher;
 import perceptron.activation.SigmoidUnipolar;
 import perceptron.activation.StepUnipolar;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ModelRunner {
 
@@ -52,7 +51,8 @@ public class ModelRunner {
                 10. Walidacja krzyżowa stałej uczącej
                 11. Naiwny klasyfikator Bayesa
                 12. k-średnich
-                13. Wyjdź""");
+                13. Problem plecakowy
+                14. Wyjdź""");
 
         int model = scanner.nextInt();
 
@@ -69,13 +69,25 @@ public class ModelRunner {
             case 10 -> crossValidation();
             case 11 -> naiveBayes();
             case 12 -> kMeans();
-            case 13 -> exit = true;
+            case 13 -> knapsack();
+            case 14 -> exit = true;
             default -> System.out.println("Niepoprawny numer modelu!");
         }
 
         if (!exit) {
             interact();
         }
+    }
+
+    private static void knapsack() {
+        int numberOfItems = 10;
+        Knapsack knapsack = new Knapsack(numberOfItems);
+        System.out.println("Wygenerowany zestaw przedmiotów:");
+        knapsack.printSolution(new ArrayList<>(Collections.nCopies(numberOfItems, 1)));
+        System.out.println("Najlepsze rozwiązanie (brute force):");
+        knapsack.printSolution(knapsack.bruteForce());
+        System.out.println("Najlepsze rozwiązanie (metoda zachłanna):");
+        knapsack.printSolution(knapsack.greedy());
     }
 
     private static void kMeans() {
